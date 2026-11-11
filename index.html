@@ -1,0 +1,196 @@
+
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#100b20">
+<title>ROYAL356 - Royal Gaming Experience</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#100b20;color:#fff;font-family:Arial,sans-serif}
+header{padding:20px;background:#171027;border-bottom:1px solid #b58a36;display:flex;justify-content:space-between;align-items:center}
+.logo{font-size:25px;font-weight:900;color:#e9c66e;letter-spacing:2px}
+.balance{background:#302344;padding:10px 14px;border-radius:20px;color:#f5d782}
+.hero{margin:18px;padding:25px 20px;border-radius:18px;background:linear-gradient(135deg,#48216d,#171027 75%);border:1px solid #94713a}
+.hero h1{font-size:30px;color:#f4d17b;margin:5px 0}
+.hero p{color:#ddd}
+.section{padding:5px 18px}
+.section h2{font-size:19px;color:#e8c36c}
+.categories{display:flex;gap:9px;overflow-x:auto;padding:8px 18px}
+.categories button{background:#251a38;border:1px solid #70532f;color:#fff;padding:11px 17px;border-radius:20px;white-space:nowrap}
+.games{display:grid;grid-template-columns:repeat(2,1fr);gap:13px;padding:10px 18px 100px}
+.game{background:#211831;border-radius:14px;overflow:hidden;border:1px solid #493552}
+.art{height:125px;display:flex;align-items:center;justify-content:center;font-size:48px;background:radial-gradient(circle,#68408b,#241331 70%)}
+.game h3{font-size:14px;margin:12px 10px 5px}
+.game p{font-size:11px;color:#b9a8c9;margin:0 10px 12px}
+.play{margin:0 10px 12px;width:calc(100% - 20px);padding:10px;background:#b58a36;color:#160f20;border:0;border-radius:7px;font-weight:bold}
+nav{position:fixed;bottom:0;width:100%;background:#1a1228;border-top:1px solid #59432d;display:flex;justify-content:space-around;padding:14px 5px}
+nav button{background:none;border:0;color:#d7c8e3;font-size:12px}
+footer{text-align:center;padding:20px;color:#887a96;font-size:11px}
+</style>
+</head>
+<body>
+<header>
+<div class="logo">ROYAL356</div>
+<div class="balance">🪙 <span id="coins">1000</span></div>
+</header>
+
+<section class="hero">
+<p>WELCOME TO</p>
+<h1>ROYAL EXPERIENCE</h1>
+<p>Discover your favorite games and enjoy the royal experience.</p>
+</section>
+
+<div class="section"><h2>✦ GAME COLLECTION</h2></div>
+<div class="categories">
+<button onclick="filter('all')">All Games</button>
+<button onclick="filter('slot')">Slot Demo</button>
+<button onclick="filter('arcade')">Arcade</button>
+<button onclick="filter('puzzle')">Puzzle</button>
+</div>
+
+<div class="games" id="games"></div>
+
+<nav>
+<button onclick="location.reload()">🏠<br>Home</button>
+<button onclick="alert('Misi harian akan segera hadir')">🎯<br>Missions</button>
+<button onclick="alert('Bonus harian akan segera hadir')">🎁<br>Bonus</button>
+<button onclick="alert('Profil demo ROYAL356')">👤<br>Profile</button>
+</nav>
+
+<footer>ROYAL356 © 2026<br>Virtual entertainment only. No real-money gambling.</footer>
+
+<script>
+
+const data = [
+  {name:"ZEUS THUNDER",category:"slot",art:"⚡"},
+  {name:"GOLDEN MAHJONG",category:"puzzle",art:"🀄"},
+  {name:"ROYAL TREASURE",category:"arcade",art:"👑"},
+  {name:"DRAGON LEGEND",category:"slot",art:"🐉"},
+  {name:"GEM MASTER",category:"puzzle",art:"💎"},
+  {name:"GOLDEN QUEST",category:"arcade",art:"🏆"}
+];
+
+let currentUser = localStorage.getItem("royal_user");
+
+function getUsers(){
+  return JSON.parse(localStorage.getItem("royal_users") || "{}");
+}
+
+function saveUsers(users){
+  localStorage.setItem("royal_users", JSON.stringify(users));
+}
+
+function showAuth(){
+  document.body.innerHTML = `
+  <div style="max-width:420px;margin:70px auto;padding:25px;background:#211831;border:1px solid #b58a36;border-radius:18px;color:white;font-family:Arial">
+    <h1 style="color:#e9c66e;text-align:center">ROYAL356</h1>
+    <h3 id="authTitle">WELCOME BACK</h3>
+    <input id="username" placeholder="Username" style="width:100%;padding:14px;margin:8px 0">
+    <input id="password" type="password" placeholder="Password" style="width:100%;padding:14px;margin:8px 0">
+    <button onclick="login()" style="width:100%;padding:14px;background:#b58a36;border:0;margin-top:10px">LOGIN</button>
+    <button onclick="register()" style="width:100%;padding:14px;margin-top:10px;background:#38264d;color:white;border:0">REGISTER</button>
+    <p style="font-size:11px;color:#bbb">Demo account only. Do not use real or sensitive passwords.</p>
+  </div>`;
+}
+
+function register(){
+  const u=document.getElementById("username").value.trim();
+  const p=document.getElementById("password").value;
+  if(!/^[a-zA-Z0-9_]{3,20}$/.test(u)||p.length<6){
+    alert("Username 3-20 karakter dan password minimal 6 karakter.");
+    return;
+  }
+  const users=getUsers();
+  if(users[u]){
+    alert("Username sudah digunakan.");
+    return;
+  }
+  users[u]={password:p,coins:1000};
+  saveUsers(users);
+  alert("Registrasi berhasil! Silakan login.");
+}
+
+function login(){
+  const u=document.getElementById("username").value.trim();
+  const p=document.getElementById("password").value;
+  const users=getUsers();
+  if(!users[u]||users[u].password!==p){
+    alert("Username atau password salah.");
+    return;
+  }
+  currentUser=u;
+  localStorage.setItem("royal_user",u);
+  location.reload();
+}
+
+function logout(){
+  localStorage.removeItem("royal_user");
+  location.reload();
+}
+
+function render(category="all"){
+  const users=getUsers();
+  const user=users[currentUser];
+  if(!user){showAuth();return;}
+
+  document.body.innerHTML=`
+  <header style="padding:20px;background:#171027;color:#e9c66e;display:flex;justify-content:space-between">
+    <b>ROYAL356</b>
+    <span>🪙 ${user.coins.toLocaleString("id-ID")}</span>
+  </header>
+  <section style="margin:18px;padding:20px;background:#48216d;border-radius:15px;color:white">
+    <h2>WELCOME, ${currentUser.toUpperCase()}</h2>
+    <p>Your Royal Gaming Experience</p>
+    <button onclick="dailyBonus()">🎁 DAILY BONUS</button>
+    <button onclick="logout()">LOGOUT</button>
+  </section>
+  <h3 style="padding:0 18px;color:#e9c66e">GAME COLLECTION</h3>
+  <div style="padding:0 18px;display:flex;gap:8px;overflow:auto">
+    <button onclick="render('all')">ALL</button>
+    <button onclick="render('slot')">SLOT DEMO</button>
+    <button onclick="render('arcade')">ARCADE</button>
+    <button onclick="render('puzzle')">PUZZLE</button>
+  </div>
+  <div id="games" style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;padding:18px"></div>
+  <p style="text-align:center;color:#aaa;font-size:11px">Virtual entertainment only · No real-money gambling</p>`;
+
+  document.getElementById("games").innerHTML=data
+  .filter(g=>category==="all"||g.category===category)
+  .map(g=>`
+    <div style="background:#211831;border:1px solid #70532f;border-radius:12px;text-align:center;padding:15px;color:white">
+      <div style="font-size:45px">${g.art}</div>
+      <b>${g.name}</b>
+      <p style="color:#aaa;font-size:11px">ROYAL356 DEMO</p>
+      <button onclick="playGame('${g.name}')" style="background:#b58a36;padding:10px;border:0;border-radius:7px">PLAY DEMO</button>
+    </div>`).join("");
+}
+
+function dailyBonus(){
+  const users=getUsers();
+  const today=new Date().toLocaleDateString("en-CA");
+  if(users[currentUser].lastBonus===today){
+    alert("Bonus hari ini sudah diambil!");
+    return;
+  }
+  users[currentUser].coins+=100;
+  users[currentUser].lastBonus=today;
+  saveUsers(users);
+  alert("Selamat! Kamu mendapat 100 koin virtual.");
+  render();
+}
+
+function playGame(name){
+  alert(name+" akan segera hadir sebagai game demo.");
+}
+
+if(currentUser && getUsers()[currentUser]){
+  render();
+}else{
+  showAuth();
+}
+
+</script>
+</body>
+</html>
